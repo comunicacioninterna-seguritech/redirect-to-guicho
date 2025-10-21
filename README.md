@@ -1,1 +1,1 @@
-# reditect-to-guicho
+# redirect-to-guicho
