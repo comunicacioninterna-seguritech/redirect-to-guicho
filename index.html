@@ -1,35 +1,150 @@
 <!DOCTYPE html>
-
 <html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Redirigiendo…</title>
 
-  <head>
+  <link rel="icon" href="guicho-asistente-virtual.png" type="image/png" />
 
-    <meta charset="UTF-8" />
+  <!-- Montserrat -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root{
+      --bg:#004E94;
+      --fg:#ffffff;
+      --accent:#ffffff;
+      --maxw:900px;
+    }
+    *{box-sizing:border-box}
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: "Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--fg);
+      background:var(--bg);
+    }
+    .wrap{
+      min-height:100%;
+      display:grid;
+      place-items:center;
+      padding:clamp(16px,4vw,40px);
+    }
+    .card{
+      width:100%;
+      max-width:var(--maxw);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
+      gap:clamp(14px,2.2vw,22px);
+    }
 
-    <title>Güicho</title>
+    h1{
+      margin:0;
+      font-weight:800;
+      letter-spacing:.2px;
+      font-size:clamp(22px,3.2vw,36px);
+    }
+    p.lead{
+      margin:0;
+      font-weight:400;
+      font-size:clamp(14px,2.2vw,20px);
+      opacity:.95;
+    }
+    .img-box{
+      width:min(360px,70vw);
+      aspect-ratio:1/1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .img-box img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      filter: drop-shadow(0 6px 18px rgba(0,0,0,.25));
+      user-select:none;
+      -webkit-user-drag:none;
+    }
 
-    <!-- Favicon personalizado -->
+    .actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      justify-content:center;
+      margin-top:4px;
+    }
+    .btn{
+      appearance:none;
+      border:2px solid var(--accent);
+      background:transparent;
+      color:var(--accent);
+      padding:12px 20px;
+      border-radius:999px;
+      font-weight:700;
+      font-size:clamp(14px,1.9vw,16px);
+      cursor:pointer;
+      transition:transform .12s ease, background .12s ease, color .12s ease;
+    }
+    .btn:hover{ background:var(--accent); color:var(--bg); transform:translateY(-1px) }
+    .hint{ font-size:12px; opacity:.75 }
 
-    <link rel="icon" type="image/png" href="guicho-asistente-virtual.png" />
+    @media (prefers-reduced-motion: reduce){
+      .btn{ transition:none }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card" aria-live="polite">
+      <h1>¡Espera un momento!</h1>
+      <p class="lead">
+        Estamos en ruta hacia la página en <span id="count">30</span>…
+      </p>
 
-    <meta http-equiv="refresh" content="1000; url=https://sites.google.com/seguritech.com/conectados/chatbot/" />
+      <div class="img-box" aria-hidden="true">
+        <img src="GOTOGUICHO.png" alt="Nave despegando hacia la página objetivo">
+      </div>
 
-  </head>
+      <div class="actions">
+        <a id="go-now" class="btn" href="#" rel="noopener">Ir ahora</a>
+      </div>
+      <div class="hint" id="target-url"></div>
+    </section>
+  </main>
 
-  <body>
+  <script>
+    const DESTINO = "https://sites.google.com/seguritech.com/conectados/chatbot/";
+    const SEGUNDOS = 30;
+    // === Lógica ===
+    const countEl = document.getElementById("count");
+    const goBtn   = document.getElementById("go-now");
+    const hint    = document.getElementById("target-url");
 
-    <p>Redirigiendo al chatbot…
+    hint.textContent = DESTINO;
 
-       <a href="https://sites.google.com/seguritech.com/conectados/chatbot/">
+    goBtn.href = DESTINO;
+    goBtn.addEventListener("click", () => {
+      window.location.href = DESTINO;
+    });
 
-         Haz clic aquí si no redirige automáticamente
-
-       </a>.
-
-    </p>
-
-  </body>
-
+    let t = Math.max(0, SEGUNDOS);
+    countEl.textContent = t;
+    if (t === 0) {
+      window.location.replace(DESTINO);
+    } else {
+      const timer = setInterval(() => {
+        t -= 1;
+        countEl.textContent = t;
+        if (t <= 0) {
+          clearInterval(timer);
+          window.location.replace(DESTINO);
+        }
+      }, 1000);
+    }
+  </script>
+</body>
 </html>
+
